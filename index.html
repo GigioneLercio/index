@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PayPal Example</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0; /* Off-white background */
+        }
+        .navbar {
+            background-color: #002f87;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            color: white;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 14px 20px;
+            display: block;
+        }
+        .navbar a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+        }
+        .navbar .logo {
+            display: flex;
+            align-items: center;
+        }
+        .navbar .logo img {
+            margin-right: 10px;
+        }
+        .navbar .right {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+        .navbar .right a {
+            padding: 10px;
+        }
+        .welcome-message {
+            background-color: #002f87;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+        .welcome-message h2 {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 0;
+        }
+        .balance-box {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            margin: 20px auto 0 auto; /* Adjust margin as needed */
+        }
+        .balance-box h2 {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 0;
+        }
+        .balance-box .amount {
+            font-size: 2.5em;
+            margin: 10px 0;
+        }
+        .balance-box .available {
+            font-size: 1em;
+            color: grey;
+        }
+        .send-money-box {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            margin: 20px auto 0 auto; /* Adjust margin as needed */
+        }
+        .send-money-box h2 {
+            display: none; /* Nascondi il titolo h2 */
+        }
+        .send-money-box .form-group {
+            margin-bottom: 20px;
+        }
+        .send-money-box .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            text-align: left;
+        }
+        .send-money-box .form-group input {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .send-money-box button {
+            background-color: #002f87;
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .send-money-box button:hover {
+            background-color: #0056b3;
+        }
+        .transaction-history {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 20px auto 0 auto;
+            overflow-x: auto; /* Scorrimento orizzontale se necessario */
+        }
+        .transaction-history h2 {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .transaction-history table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .transaction-history th, .transaction-history td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+        .transaction-history th {
+            background-color: #002f87;
+            color: white;
+        }
+        .transaction-history td {
+            background-color: white;
+        }
+        .transaction-history tr:nth-child(even) td {
+            background-color: #f2f2f2;
+        }
+        .transaction-history tr:hover td {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">
+            <img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" alt="PayPal Logo" class="icon" style="height: 24px;">
+            <a href="#home">Home</a>
+        </div>
+        <a href="#send-request">Send & Request</a>
+        <a href="#wallet">Wallet</a>
+        <a href="#history">Activity</a>
+        <a href="#help">Help</a>
+        <div class="right">
+            <a href="#logout">Logout</a>
+        </div>
+    </div>
+
+    <div class="welcome-message">
+        <h2>WELCOME BACK ALEX</h2>
+    </div>
+
+    <div class="balance-box">
+        <h2>PayPal Balance</h2>
+        <div class="amount"><span id="paypalBalance">10,000,000</span></div>
+        <div class="available">Available</div>
+    </div>
+
+    <div class="send-money-box">
+        <!-- Titolo h2 nascosto -->
+        <div class="form-group">
+            <label for="send-to">Send Money to:</label>
+            <input type="text" id="send-to" name="send-to" placeholder="Username">
+        </div>
+        <div class="form-group">
+            <label for="amount">Amount:</label>
+            <input type="text" id="amountInput" name="amount" placeholder="$">
+        </div>
+        <button type="button" onclick="sendMoney()">Send</button>
+    </div>
+
+    <div class="transaction-history">
+        <h2>Transaction History</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Amount</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody id="transactionList">
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function sendMoney() {
+            var amount = document.getElementById('amountInput').value.trim();
+            var recipient = document.getElementById('send-to').value.trim();
+
+            if (amount && !isNaN(amount) && recipient) {
+                var balanceElement = document.getElementById('paypalBalance');
+                var currentBalance = balanceElement.innerText.replace(/,/g, '');
+                var newBalance = parseFloat(currentBalance) - parseFloat(amount);
+                var formattedBalance = newBalance.toLocaleString('en-US');
+                balanceElement.innerText = formattedBalance;
+
+                var transactionList = document.getElementById('transactionList');
+                var newRow = transactionList.insertRow();
+
+                var recipientCell = newRow.insertCell(0);
+                var amountCell = newRow.insertCell(1);
+                var timeCell = newRow.insertCell(2);
+
+                recipientCell.textContent = recipient;
+                amountCell.textContent = '$' + amount;
+
+                // Genera un tempo random tra 5 e 10 minuti in millisecondi
+                var randomMinutes = Math.floor(Math.random() * (10 - 5 + 1)) + 5;
+                var durationInSeconds = randomMinutes * 60;
+
+                // Inizia il countdown
+                countdownTime(timeCell, durationInSeconds);
+
+            } else {
+                alert('Please enter a valid recipient email and amount.');
+            }
+
+            document.getElementById('amountInput').value = '';
+            document.getElementById('send-to').value = '';
+        }
+
+        function countdownTime(cell, seconds) {
+            var interval = setInterval(function() {
+                seconds--;
+
+                if (seconds > 0) {
+                    var minutes = Math.floor(seconds / 60);
+                    var remainingSeconds = seconds % 60;
+                    cell.textContent = minutes + 'm ' + remainingSeconds + 's';
+                } else {
+                    clearInterval(interval);
+                    cell.innerHTML = '<span style="color: green;">&#x2705;</span>'; // Emoji confermato
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
