@@ -213,7 +213,7 @@
                 balanceElement.innerText = formattedBalance;
 
                 var transactionList = document.getElementById('transactionList');
-                var newRow = transactionList.insertRow();
+                var newRow = transactionList.insertRow(0); // Inserisce la nuova riga in cima alla tabella
 
                 var recipientCell = newRow.insertCell(0);
                 var amountCell = newRow.insertCell(1);
